@@ -63,6 +63,16 @@ spec:
         description: Name of the subnetwork to create resources in.
         varType: string
         defaultValue: ""
+      - name: network_self_link
+        description: The self-link of the VPC network.
+        varType: string
+        defaultValue: ""
+        connections:
+          - source:
+              source: github.com/terraform-google-modules/terraform-google-network
+              version: ">= 16.0.1"
+            spec:
+              outputExpr: network_self_link
       - name: subnets
         description: "Optional: A map containing subnet details Used to derive the subnetwork URI if subnetwork is not provided."
         varType: |-

@@ -42,6 +42,13 @@ variable "subnetwork" {
   default     = ""
 }
 
+variable "network_self_link" {
+  type        = string
+  description = "The self-link of the VPC network."
+  default     = ""
+}
+
+
 variable "subnets" {
   description = "Optional: A map containing subnet details Used to derive the subnetwork URI if subnetwork is not provided."
   type = list(object({

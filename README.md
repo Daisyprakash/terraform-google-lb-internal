@@ -79,6 +79,7 @@ module "gce-ilb" {
 | name | Name for the forwarding rule and prefix for supporting resources. | `string` | n/a | yes |
 | network | Name of the network to create resources in. | `string` | `"default"` | no |
 | network\_project | Name of the project for the network. Useful for shared VPC. Default is var.project\_id. | `string` | `""` | no |
+| network\_self\_link | The self-link of the VPC network. | `string` | `""` | no |
 | ports | List of ports to forward to backend services. Max is 5. The `ports` or `all_ports` are mutually exclusive. | `list(string)` | <pre>[<br>  "80"<br>]</pre> | no |
 | project\_id | The project\_id to deploy to. | `string` | n/a | yes |
 | region | Region for cloud resources. | `string` | n/a | yes |

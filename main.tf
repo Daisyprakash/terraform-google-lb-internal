@@ -15,6 +15,8 @@
  */
 
 locals {
+  network_name_from_self_link = var.network_self_link != "" ? basename(var.network_self_link) : ""
+
   auto_discovered_subnet = try(
     [
       for s in var.subnets : s.id
@@ -45,7 +47,9 @@ locals {
   )
 }
 
+# Only perform the network lookup if the self_link is not provided.
 data "google_compute_network" "network" {
+  count   = var.network_self_link == "" ? 1 : 0
   name    = var.network
   project = var.network_project == "" ? var.project_id : var.network_project
 }
@@ -63,7 +67,7 @@ resource "google_compute_forwarding_rule" "default" {
   project                = var.project_id
   name                   = var.name
   region                 = var.region
-  network                = data.google_compute_network.network.self_link
+  network                = var.network_self_link != "" ? var.network_self_link : data.google_compute_network.network[0].self_link
   subnetwork             = local.final_subnetwork
   allow_global_access    = var.global_access
   load_balancing_scheme  = "INTERNAL"
@@ -86,7 +90,7 @@ resource "google_compute_region_backend_service" "default" {
   }[var.health_check["type"]]
   region                          = var.region
   protocol                        = var.ip_protocol
-  network                         = data.google_compute_network.network.self_link
+  network                         = var.network_self_link != "" ? var.network_self_link : data.google_compute_network.network[0].self_link
   connection_draining_timeout_sec = var.connection_draining_timeout_sec
   session_affinity                = var.session_affinity
 
@@ -189,7 +193,7 @@ resource "google_compute_firewall" "default-ilb-fw" {
   count   = var.create_backend_firewall ? 1 : 0
   project = var.network_project == "" ? var.project_id : var.network_project
   name    = "${var.name}-ilb-fw"
-  network = data.google_compute_network.network.name
+  network = local.network_name_from_self_link != "" ? local.network_name_from_self_link : data.google_compute_network.network[0].name
 
   allow {
     protocol = lower(var.ip_protocol)
@@ -214,7 +218,7 @@ resource "google_compute_firewall" "default-hc" {
   count   = var.create_health_check_firewall ? 1 : 0
   project = var.network_project == "" ? var.project_id : var.network_project
   name    = "${var.name}-hc"
-  network = data.google_compute_network.network.name
+  network = local.network_name_from_self_link != "" ? local.network_name_from_self_link : data.google_compute_network.network[0].name
 
   allow {
     protocol = "tcp"
