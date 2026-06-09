@@ -24,7 +24,7 @@ spec:
     source:
       repo: https://github.com/terraform-google-modules/terraform-google-lb-internal.git
       sourceType: git
-    version: 9.0.4
+    version: 9.0.5
     actuationTool:
       flavor: Terraform
       version: ">= 1.3"
@@ -55,7 +55,7 @@ spec:
         defaultValue: default
         connections:
           - source:
-              source: github.com/terraform-google-modules/terraform-google-network
+              source: github.com/Daisyprakash/terraform-google-network
               version: ">= 16.0.1"
             spec:
               outputExpr: network_name
@@ -75,7 +75,7 @@ spec:
         defaultValue: []
         connections:
           - source:
-              source: github.com/terraform-google-modules/terraform-google-network
+              source: github.com/Daisyprakash/terraform-google-network
               version: ">= 18.1.1"
             spec:
               outputExpr: subnets_overview
@@ -85,7 +85,7 @@ spec:
         defaultValue: ""
         connections:
           - source:
-              source: github.com/terraform-google-modules/terraform-google-network
+              source: github.com/Daisyprakash/terraform-google-network
               version: ">= 16.0.1"
             spec:
               outputExpr: project_id
